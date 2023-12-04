@@ -39,3 +39,9 @@ gpmp <- read.csv("per-capita-mismanaged-plastic-waste-vs-gdp-per-capita.csv")
 #to know how many countries remain we count the number of rows
 nrow(gpmp_2010_new) #148
 colnames(gpmp_2010_new) <- c("country", "mismanaged p
+
+
+
+gpmp2010_final <- subset(gpmp2010_new, select = c("Entity", "Per.capita.mismanaged.plastic.waste", "GDP.per.capita..PPP..constant.2011.international...", "Total.population..Gapminder..HYDE...UN."))
+colnames(gpmp2010_final) <- c("Country", "Mismanaged plastic waste per capita", "GDP per capita", "Population")
+view(gpmp2010_final)
