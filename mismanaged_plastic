@@ -2,20 +2,20 @@
 # 1. What is the absolute frequency distribuiton of plastic pollution in regards to each country's GDP per capita?
 # 2. What is the relationship between the amount of plastic polluton and 
 
-# Install packages needed for this project
-install.packages("tidyverse")
-install.packages("dplyr")
-install.packages("ggplot2")
-install.packages("GGally")
-
-# Load the installed packages so that they are available for us to use
-library(tidyverse)
-library(dplyr)
-library(ggplot2)
-library(GGally)
-# Create a data directory that can be reproducible
-
-gpmp<-read.csv("per-capita-mismanaged-plastic-waste-vs-gdp-per-capita.csv")
-gpmp2010<-filter(gpmp, Year=="2010" )
-gpmp2010_new<-na.omit(gpmp2010)
-
+####setwd("/Users/Cat/Desktop/STATISTICA/global plastic pollution")
+#create the dataframe with the csv of global plastic production vs gdp per capita
+globplasprodgdp<-read.csv("per-capita-plastic-waste-vs-gdp-per-capita.csv")
+View(globplasprodgdp)
+nrow(globplasprodgdp)
+ncol(globplasprodgdp)
+globmismplas<-read.csv("mismanaged-waste-global-total.csv")
+View(globmismplas)
+globpercapmisplas<-read.csv("per-capita-mismanaged-plastic-waste-vs-gdp-per-capita.csv")
+View(globpercapmisplas)
+glopercapmisplas_new<-filter(globpercapmisplas, Year=="2010" )
+View(glopercapmisplas_new)
+globpercapmisplas_new<-na.omit(glopercapmisplas_new)
+View(globpercapmisplas_new)
+summary(globpercapmisplas_new)
+nrow(globpercapmisplas_new) #
+#######
