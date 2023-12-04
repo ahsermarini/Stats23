@@ -48,3 +48,11 @@ gpmp2010_new<-na.omit(gpmp2010)
 gpmp2010_final <- subset(gpmp2010_new, select = c("Entity", "Per.capita.mismanaged.plastic.waste", "GDP.per.capita..PPP..constant.2011.international...", "Total.population..Gapminder..HYDE...UN."))
 colnames(gpmp2010_final) <- c("Country", "Mismanaged plastic waste per capita (per day/kg)", "GDP per capita", "Population")
 view(gpmp2010_final)
+
+summary(gpmp2010_final)
+glimpse(gpmp2010_final)
+
+quantiles <- quantile(gpmp2010_final[,2], probs = c(0.25, 0.5, 0.75))
+quantiles
+hist(gpmp2010_final[,2], main="Boxplot 1", xlab="Waste", col="green", border="black", horizontal=FALSE)
+boxplot(gpmp2010_final[,2], main="Boxplot 1", ylab="Waste", col="green", border="black", horizontal=FALSE)
