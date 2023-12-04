@@ -14,3 +14,8 @@ library(dplyr)
 library(ggplot2)
 library(GGally)
 # Create a data directory that can be reproducible
+
+gpmp<-read.csv("per-capita-mismanaged-plastic-waste-vs-gdp-per-capita.csv")
+gpmp2010<-filter(gpmp, Year=="2010" )
+gpmp2010_new<-na.omit(gpmp2010)
+
