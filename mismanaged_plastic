@@ -54,5 +54,5 @@ glimpse(gpmp2010_final)
 
 quantiles <- quantile(gpmp2010_final[,2], probs = c(0.25, 0.5, 0.75))
 quantiles
-hist(gpmp2010_final[,2], main="Boxplot 1", xlab="Waste", col="green", border="black", horizontal=FALSE)
+hist(gpmp2010_final[,2], main="Boxplot 1", ylab="Number of countries", xlab="Mismanaged plastic waste per capita", col="green", border="black", horizontal=FALSE)
 boxplot(gpmp2010_final[,2], main="Boxplot 1", ylab="Waste", col="green", border="black", horizontal=FALSE)
