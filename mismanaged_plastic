@@ -86,6 +86,13 @@ quantile(gpmp2010_final[,4])
 quantiles <- quantile(gpmp2010_final[,2], probs = c(0.25, 0.5, 0.75))
 quantiles
 
+## Variances and standard deviations
+var(gpmp2010_final[,2])  # this is the sample variance, which is the incorrect one!!
+sd(gpmp2010_final[,2])
+sd(gpmp2010_final[,3])
+sd(gpmp2010_final[,4])
+
+## Univariate graphs
 custom_breaks_waste <- quantile(gpmp2010_final[,2])
 hist(gpmp2010_final[,2], main="Number of countries per quartile of mismanaged plastic waste per capita", ylab="Number of countries", xlab="Mismanaged plastic waste per capita", breaks=custom_breaks_waste, col="green", border="black")
 
