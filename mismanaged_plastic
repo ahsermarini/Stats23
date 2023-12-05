@@ -115,5 +115,7 @@ custom_breaks_pop <- quantile(gpmp2010_final[,4])
 hist(gpmp2010_final[,4], main="Number of countries per quartile of population (super pretty)", ylab="Number of countries", xlab="Population", breaks=custom_breaks_pop, col="green", border="black")
 
 boxplot(gpmp2010_final[,2], main="Boxplot 1", ylab="Waste", col="green", border="black")
+boxplot(gpmp2010_final[,3], main="Boxplot 2", ylab="GDP", col="green", border="black")
+boxplot(gpmp2010_final[,4], main="Boxplot 3", ylab="Population", col="green", border="black")
 
 
