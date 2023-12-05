@@ -86,15 +86,14 @@ quantile(gpmp2010_final[,4])
 quantiles <- quantile(gpmp2010_final[,2], probs = c(0.25, 0.5, 0.75))
 quantiles
 
-custom_breaks_waste <- c(0.00100, 0.01100, 0.03700, 0.08000, 0.29900)
+custom_breaks_waste <- quantile(gpmp2010_final[,2])
 hist(gpmp2010_final[,2], main="Number of countries per quartile of mismanaged plastic waste per capita", ylab="Number of countries", xlab="Mismanaged plastic waste per capita", breaks=custom_breaks_waste, col="green", border="black")
 
-custom_breaks_GDP <- c(660.2, 4407.3, 11946.6, 28850.1, 125140.9)
+custom_breaks_GDP <- quantile(gpmp2010_final[,3])
 hist(gpmp2010_final[,3], main="Number of countries per quartile of GDP per capita", ylab="Number of countries", xlab="GDP per capita", breaks=custom_breaks_GDP, col="green", border="black")
 
-custom_breaks_pop <- c(1.000e+04, 1.308e+06, 6.419e+06, 2.921e+07, 1.369e+09)
+custom_breaks_pop <- quantile(gpmp2010_final[,4])
 hist(gpmp2010_final[,4], main="Number of countries per quartile of population (super pretty)", ylab="Number of countries", xlab="Population", breaks=custom_breaks_pop, col="green", border="black")
-
 
 boxplot(gpmp2010_final[,2], main="Boxplot 1", ylab="Waste", col="green", border="black")
 
