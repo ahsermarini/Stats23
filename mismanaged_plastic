@@ -87,10 +87,23 @@ quantiles <- quantile(gpmp2010_final[,2], probs = c(0.25, 0.5, 0.75))
 quantiles
 
 ## Variances and standard deviations
-var(gpmp2010_final[,2])  # this is the sample variance, which is the incorrect one!!
-sd(gpmp2010_final[,2])
-sd(gpmp2010_final[,3])
-sd(gpmp2010_final[,4])
+# p.s. the functions var() and sd() compute the sample variance and the sample standard deviation, not the population ones
+## Variances, standard deviations, and coefficients of variation
+n2 <-length(gpmp2010_final[,2])
+var(gpmp2010_final[,2]) * (n2-1/n2)  # variance of waste
+(wastesd <- sqrt(sum(gpmp2010_final[,2]) - mean(gpmp2010_final[,2])^2)/(n2))  # standard deviation
+(cvwaste <- wastesd/mean(gpmp2010_final[,2]) * 100)  # percentage coefficient of variation
+
+n3 <-length(gpmp2010_final[,3])
+var(gpmp2010_final[,3]) * (n3-1/n3)  # variance of GDP
+(GDPsd <- sqrt(sum(gpmp2010_final[,3]) - mean(gpmp2010_final[,3])^2)/(n3))  # standard deviation
+(cvGDP <- GDPsd/mean(gpmp2010_final[,3]) * 100)  # percentage coefficient of variation
+
+n4 <-length(gpmp2010_final[,4])
+var(gpmp2010_final[,4]) * (n4-1/n4)  # variance of GDP
+(popsd <- sqrt(sum(gpmp2010_final[,4]) - mean(gpmp2010_final[,4])^2)/(n4))  # standard deviation
+(cvpop <- popsd/mean(gpmp2010_final[,4]) * 100)  # percentage coefficient of variation
+
 
 ## Univariate graphs
 custom_breaks_waste <- quantile(gpmp2010_final[,2])
