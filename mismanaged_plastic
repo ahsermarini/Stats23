@@ -69,16 +69,19 @@ typeof(gpmp2010_final[,4])
 # Measures of central tendency
 mean(gpmp2010_final[,2])
 median(gpmp2010_final[,2])
-quantile(gpmp2010_final[,2])
 range(gpmp2010_final[,2])
+quantile(gpmp2010_final[,2])
+0.080 - 0.011  # interquartile range for waste
 mean(gpmp2010_final[,3])
 median(gpmp2010_final[,3])
-quantile(gpmp2010_final[,3])
 range(gpmp2010_final[,3])
+quantile(gpmp2010_final[,3])
+28850.057 - 4407.301  # interquartile rage for GDP
 mean(gpmp2010_final[,4])
 median(gpmp2010_final[,4])
-quantile(gpmp2010_final[,4])
 range(gpmp2010_final[,4])
+quantile(gpmp2010_final[,4])
+29206500 - 1308000  # interquartile range for population
 
 quantiles <- quantile(gpmp2010_final[,2], probs = c(0.25, 0.5, 0.75))
 quantiles
