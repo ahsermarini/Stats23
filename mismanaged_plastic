@@ -49,20 +49,32 @@ gpmp2010_final <- subset(gpmp2010_new, select = c("Entity", "Per.capita.mismanag
 colnames(gpmp2010_final) <- c("Country", "Mismanaged plastic waste per capita (per day/kg)", "GDP per capita", "Population")
 view(gpmp2010_final)
 
+## Dataset description
+# Overall
+view(gpmp2010_final)
 summary(gpmp2010_final)
 glimpse(gpmp2010_final)
 
-# Measures of central tendency for every column
+# Nature of the variables
+class(gpmp2010_final[,1])
+typeof(gpmp2010_final[,1])
+class(gpmp2010_final[,2])
+typeof(gpmp2010_final[,2])
+class(gpmp2010_final[,3])
+typeof(gpmp2010_final[,3])
+class(gpmp2010_final[,4])
+typeof(gpmp2010_final[,4])
+
+
+# Measures of central tendency
 mean(gpmp2010_final[,2])
 median(gpmp2010_final[,2])
 quantile(gpmp2010_final[,2])
 range(gpmp2010_final[,2])
-
 mean(gpmp2010_final[,3])
 median(gpmp2010_final[,3])
 quantile(gpmp2010_final[,3])
 range(gpmp2010_final[,3])
-
 mean(gpmp2010_final[,4])
 median(gpmp2010_final[,4])
 quantile(gpmp2010_final[,4])
