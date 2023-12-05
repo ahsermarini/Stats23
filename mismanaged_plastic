@@ -86,9 +86,8 @@ quantile(gpmp2010_final[,4])
 quantiles <- quantile(gpmp2010_final[,2], probs = c(0.25, 0.5, 0.75))
 quantiles
 
-## Variances and standard deviations
-# p.s. the functions var() and sd() compute the sample variance and the sample standard deviation, not the population ones
 ## Variances, standard deviations, and coefficients of variation
+# p.s. the functions var() and sd() compute the sample variance and the sample standard deviation, not the population ones
 n2 <-length(gpmp2010_final[,2])
 var(gpmp2010_final[,2]) * (n2-1/n2)  # variance of waste
 (wastesd <- sqrt(sum(gpmp2010_final[,2]) - mean(gpmp2010_final[,2])^2)/(n2))  # standard deviation
