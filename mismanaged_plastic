@@ -1,6 +1,6 @@
 # Based on this data set we will be completing the following objectives:
 # 1. What is the absolute frequency distribuiton of plastic pollution in regards to each country's GDP per capita?
-# 2. What is the relationship between the amount of plastic polluton and 
+# 2. What is the relationship between the amount of plastic polluton and the gdp per capita?
 
 # Install packages needed for this project
 install.packages("tidyverse")
@@ -118,4 +118,20 @@ boxplot(gpmp2010_final[,2], main="Boxplot 1", ylab="Waste", col="green", border=
 boxplot(gpmp2010_final[,3], main="Boxplot 2", ylab="GDP", col="green", border="black")
 boxplot(gpmp2010_final[,4], main="Boxplot 3", ylab="Population", col="green", border="black")
 
+#bivariate analysis
+#gdp per capita versus mismanaged plastic waste per capita
+gdpwaste_labels<-labs(x = "Mismanaged plastic waste per capita (kg/day)", y = "GDP per capita ($)",
+                title = "GDP versus mismanaged plastic waste per capita")
+gdpwaste<-ggplot(gpmp2010_final, mapping = aes(x = gpmp2010_final$`Mismanaged plastic waste per capita (per day/kg)`, y = gpmp2010_final$`GDP per capita`))
+gdpwaste + geom_point() + theme_light() + gdpwaste_labels 
+gdpwaste + geom_density2d() + theme_linedraw() + gdpwaste_labels
 
+#gdp per capita versus population
+populationwaste<-ggplot(gpmp2010_final, mapping = aes(x=gpmp2010_final$`Mismanaged plastic waste per capita (per day/kg)`, y = gpmp2010_final$Population))
+populationwaste_labels<-labs(x="Mismanaged plastic waste per capita (kd/day)", y="Population", 
+                             title="Population versus mismanaged plastic waste per capita")
+populationwaste + geom_point() + populationwaste_labels + theme_minimal()
+
+#let's see the correlation coefficient for mismanaged plastic waste relatively to population and GDP per capita.
+cor.test(gpmp2010_final$`Mismanaged plastic waste per capita (per day/kg)`, gpmp2010_final$`GDP per capita`) #there is a moderate negative correlation, so it means that increasing the population decreasing the GDP per capita
+cor.test(gpmp2010_final$`Mismanaged plastic waste per capita (per day/kg)`, gpmp2010_final$Population) #there is a slightly negative correlation between population and mismanaged plastic waste
