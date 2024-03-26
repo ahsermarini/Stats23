@@ -131,4 +131,6 @@ populationwaste + geom_point() + populationwaste_labels + theme_minimal() + geom
 
 #let's see the correlation coefficient for mismanaged plastic waste relatively to population and GDP per capita.
 cor.test(gpmp2010_final$`Mismanaged plastic waste per capita (per day/kg)`, gpmp2010_final$`GDP per capita`) #there is a moderate negative correlation, so it means that decreasing the GDP per capita, the mismanaged plastic waste per capita increases
+-0.432252^2  #coefficient of determination R2
 cor.test(gpmp2010_final$`Mismanaged plastic waste per capita (per day/kg)`, gpmp2010_final$Population) #there is a slightly negative correlation between population and mismanaged plastic waste
+-0.02523681^2  #coefficient of determination R2
