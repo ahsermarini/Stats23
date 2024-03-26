@@ -116,14 +116,14 @@ boxplot(gpmp2010_final[,4], main="Boxplot 3", ylab="Population", col="green", bo
 
 
 #bivariate analysis
-#gdp per capita versus mismanaged plastic waste per capita
+#mismanaged plastic waste per capita vs gdp per capita
 gdpwaste_labels<-labs(x = "Mismanaged plastic waste per capita (kg/day)", y = "GDP per capita ($)",
                 title = "GDP versus mismanaged plastic waste per capita")
 gdpwaste<-ggplot(gpmp2010_final, mapping = aes(x = gpmp2010_final$`Mismanaged plastic waste per capita (per day/kg)`, y = gpmp2010_final$`GDP per capita`))
 gdpwaste + geom_point() + theme_light() + gdpwaste_labels 
 gdpwaste + geom_density2d() + theme_linedraw() + gdpwaste_labels
 
-#gdp per capita versus population
+#mismanaged plastic waste per capita versus population
 populationwaste<-ggplot(gpmp2010_final, mapping = aes(x=gpmp2010_final$`Mismanaged plastic waste per capita (per day/kg)`, y = gpmp2010_final$Population))
 populationwaste_labels<-labs(x="Mismanaged plastic waste per capita (kd/day)", y="Population", 
                              title="Population versus mismanaged plastic waste per capita")
