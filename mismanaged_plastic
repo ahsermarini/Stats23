@@ -36,10 +36,6 @@ nrow(globpercapmisplas_new) #
 gpmp <- read.csv("per-capita-mismanaged-plastic-waste-vs-gdp-per-capita.csv")
 ###gpmp2010 <- filter(gpmp, Year=="2010" ) %>% na.omit(gpmp) %>% gpmp$Code <- NULL &>& gpmp%Year<- NULL %>% gpmp$Continent <- NULL
 
-#to know how many countries remain we count the number of rows
-nrow(gpmp_2010_new) #148
-colnames(gpmp_2010_new) <- c("country", "mismanaged p
-
 
 
 ### Diego
