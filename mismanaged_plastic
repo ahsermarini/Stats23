@@ -29,7 +29,7 @@ View(glopercapmisplas_new)
 globpercapmisplas_new<-na.omit(glopercapmisplas_new)
 View(globpercapmisplas_new)
 summary(globpercapmisplas_new)
-nrow(globpercapmisplas_new) #
+nrow(globpercapmisplas_new)
 #######
 
 
@@ -43,7 +43,6 @@ gpmp2010 <- filter(gpmp, Year=="2010" )
 gpmp2010_new<-na.omit(gpmp2010)
 gpmp2010_final <- subset(gpmp2010_new, select = c("Entity", "Per.capita.mismanaged.plastic.waste", "GDP.per.capita..PPP..constant.2011.international...", "Total.population..Gapminder..HYDE...UN."))
 colnames(gpmp2010_final) <- c("Country", "Mismanaged plastic waste per capita (per day/kg)", "GDP per capita", "Population")
-view(gpmp2010_final)
 
 ## Dataset description
 # Overall
@@ -66,41 +65,38 @@ typeof(gpmp2010_final[,4])
 mean(gpmp2010_final[,2])
 median(gpmp2010_final[,2])
 range(gpmp2010_final[,2])
-quantile(gpmp2010_final[,2])
-0.299 - 0.001   # range waste #USE THE FUNCTION QUANTILE
-0.080 - 0.011  # interquartile range for waste
+(quantiles_waste <- quantile(gpmp2010_final[,2]))
+quantiles_waste[5] - quantiles_waste[1] # range waste
+quantiles_waste[4] - quantiles_waste[2] # interquartile range for waste
 mean(gpmp2010_final[,3])
 median(gpmp2010_final[,3])
 range(gpmp2010_final[,3])
-quantile(gpmp2010_final[,3])
-125140.838 - 660.211   # range GDP
-28850.057 - 4407.301  # interquartile range for GDP
+(quantiles_GDP <- quantile(gpmp2010_final[,3]))
+quantiles_GDP[5] - quantiles_GDP[1] # range GDP
+quantiles_GDP[4] - quantiles_GDP[2] # interquartile range for GDP
 mean(gpmp2010_final[,4])
 median(gpmp2010_final[,4])
 range(gpmp2010_final[,4])
-quantile(gpmp2010_final[,4])
-1368811008 - 10000   # range population
-29206500 - 1308000  # interquartile range for population
+(quantiles_population <- quantile(gpmp2010_final[,4]))
+quantiles_population[5] - quantiles_population[1] # range population
+quantiles_population[4] - quantiles_population[2] # interquartile range for population
 
-quantiles <- quantile(gpmp2010_final[,2], probs = c(0.25, 0.5, 0.75))
-quantiles
 
 ## Variances, standard deviations, and coefficients of variation
-#VAR SU R DA LA UNBIASED SAMPLE VARIANCE. PER N GRANDE VA BENE. 
 # p.s. the functions var() and sd() compute the sample variance and the sample standard deviation, not the population ones
 n2 <-length(gpmp2010_final[,2])
 var(gpmp2010_final[,2])  # variance of waste
-(wastesd <- sqrt((sum(gpmp2010_final[,2]) - mean(gpmp2010_final[,2])^2)/n2)  # standard deviation
+(wastesd <- sd(gpmp2010_final[,2]))  # standard deviation
 (cvwaste <- wastesd/mean(gpmp2010_final[,2]) * 100)  # percentage coefficient of variation
 
 n3 <-length(gpmp2010_final[,3])
-var(gpmp2010_final[,3])  # variance of GDP #BETTER SD
-(GDPsd <- sqrt((sum(gpmp2010_final[,3]) - mean(gpmp2010_final[,3])^2))/n3) # standard deviation
+var(gpmp2010_final[,3])  # variance of GDP
+(GDPsd <- sd(gpmp2010_final[,3]))  # standard deviation
 (cvGDP <- GDPsd/mean(gpmp2010_final[,3]) * 100)  # percentage coefficient of variation
 
 n4 <-length(gpmp2010_final[,4])
 var(gpmp2010_final[,4])  # variance of population
-(popsd <- sqrt((sum(gpmp2010_final[,4]) - mean(gpmp2010_final[,4])^2))/n4)  # standard deviation
+(popsd <- sd(gpmp2010_final[,4]))  # standard deviation
 (cvpop <- popsd/mean(gpmp2010_final[,4]) * 100)  # percentage coefficient of variation
 
 
@@ -135,10 +131,11 @@ populationwaste + geom_point() + populationwaste_labels + theme_minimal() + geom
 
 #let's see the correlation coefficient for mismanaged plastic waste relatively to population and GDP per capita.
 cor.test(gpmp2010_final$`Mismanaged plastic waste per capita (per day/kg)`, gpmp2010_final$`GDP per capita`) #there is a moderate negative correlation, so it means that decreasing the GDP per capita, the mismanaged plastic waste per capita increases
-(-0.432252)^2  #coefficient of determination R2 #STIMARE RETTA DI REGRESSIONE CON LM che stima parametri retta di regressione alpha e beta. possiamo dividere la popolazione 
+(-0.432252)^2  #coefficient of determination R2
 cor.test(gpmp2010_final$`Mismanaged plastic waste per capita (per day/kg)`, gpmp2010_final$Population) #there is a slightly negative correlation between population and mismanaged plastic waste
 (-0.02523681)^2  #coefficient of determination R2
 
+#funzione lm() per alpha e beta della retta di regressione
 
 ## Inferential analysis
 # {H0: μ = 0.052;  H1: μ > 0.052}, alpha = 0.05
@@ -153,6 +150,7 @@ tsobs_waste > t147_0.95
 # therefore we cannot reject H0 at 5% significance level
 pval
 # the p-value we expect stands between 0.5 and 0.6
+
 #FARE CHECK DI NORMALITA CON ISTOGRAMMA DENSITA. 
 #SI POSSONO FARE DUE TEST DIVERSI SE DIVIDIAMO IN DUE GRUPPI I DATI. 
 #TEST DIFFERENZA MEDIA 
