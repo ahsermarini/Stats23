@@ -5,17 +5,19 @@
 # Install packages needed for this project
 install.packages("tidyverse")
 install.packages("GGally")
+install.packages("stats")
 
 # Load the installed packages so that they are available for us to use
 library(tidyverse)
 library(GGally)
+library(stats)
 
 #create the dataframe with the csv of global plastic production vs gdp per capita
-globplasprodgdp <- read.csv("plastic-waste-per-capita.csv")
+globplasprodgdp <-read.csv("plastic-waste-per-capita.csv")
 View(globplasprodgdp)
 nrow(globplasprodgdp)
 ncol(globplasprodgdp)
-globmismplas<-read.csv("mismanaged-waste-global-total.csv")
+globmismplas <-read.csv("mismanaged-waste-global-total.csv")
 View(globmismplas)
 globpercapmisplas <- read.csv("per-capita-mismanaged-plastic-waste-vs-gdp-per-capita.csv")
 View(globpercapmisplas)
@@ -64,13 +66,13 @@ range(gpmp2010_final[,2])
 quantiles_waste[5] - quantiles_waste[1] # range waste
 quantiles_waste[4] - quantiles_waste[2] # interquartile range for waste
 mean(gpmp2010_final[,3])
-median(gpmp2010_final[,3])
+(GDP_median <- median(gpmp2010_final[,3]))
 range(gpmp2010_final[,3])
 (quantiles_GDP <- quantile(gpmp2010_final[,3]))
 quantiles_GDP[5] - quantiles_GDP[1] # range GDP
 quantiles_GDP[4] - quantiles_GDP[2] # interquartile range for GDP
 mean(gpmp2010_final[,4])
-median(gpmp2010_final[,4])
+(pop_median <- median(gpmp2010_final[,4]))
 range(gpmp2010_final[,4])
 (quantiles_population <- quantile(gpmp2010_final[,4]))
 quantiles_population[5] - quantiles_population[1] # range population
@@ -95,6 +97,20 @@ var(gpmp2010_final[,4])  # variance of population
 (cvpop <- popsd/mean(gpmp2010_final[,4]) * 100)  # percentage coefficient of variation
 
 
+
+## Preparation for specific analysis
+#splitting the countries into two different dataframes based on GDP
+gpmp2010_final_lowerGDP <- gpmp2010_final[gpmp2010_final$`GDP per capita` < GDP_median, ]
+gpmp2010_final_higherGDP <- gpmp2010_final[gpmp2010_final$`GDP per capita` > GDP_median, ]
+#splitting the countries into two different dataframes based on population
+gpmp2010_final_lowerpop <- gpmp2010_final[gpmp2010_final$Population < pop_median, ]
+gpmp2010_final_higherpop <- gpmp2010_final[gpmp2010_final$Population > pop_median, ]
+#creating dataframes without the outliers (2 countries with a population > 1 billion)
+gpmp2010_final_nooutliers <- gpmp2010_final[gpmp2010_final$Population < 1e+09, ]
+gpmp2010_final_higherpop_nooutliers <- gpmp2010_final_higherpop[gpmp2010_final_higherpop$Population < 1e+09, ]
+view(gpmp2010_final_higherpop_nooutliers)
+
+
 ## Univariate graphs
 custom_breaks_waste <- quantile(gpmp2010_final[,2])
 hist(gpmp2010_final[,2], main="Number of countries per quartile of mismanaged plastic waste per capita", ylab="Number of countries", xlab="Mismanaged plastic waste per capita", breaks=custom_breaks_waste, col="green", border="black")
@@ -102,40 +118,109 @@ hist(gpmp2010_final[,2], main="Number of countries per quartile of mismanaged pl
 custom_breaks_GDP <- quantile(gpmp2010_final[,3])
 hist(gpmp2010_final[,3], main="Number of countries per quartile of GDP per capita", ylab="Number of countries", xlab="GDP per capita", breaks=custom_breaks_GDP, col="green", border="black")
 
-custom_breaks_pop <- quantile(gpmp2010_final[,4])
-hist(gpmp2010_final[,4], main="Number of countries per quartile of population (super pretty)", ylab="Number of countries", xlab="Population", breaks=custom_breaks_pop, col="green", border="black")
-
 boxplot(gpmp2010_final[,2], main="Boxplot of mismanaged plastic waste per capita", ylab="Waste", col="green", border="black")
 boxplot(gpmp2010_final[,3], main="Boxplot of GDP per capita", ylab="GDP", col="green", border="black")
-boxplot(gpmp2010_final[,4], main="Boxplot of population (super pretty)", ylab="Population", col="green", border="black")
 
 
 ## Bivariate analysis
-#mismanaged plastic waste per capita vs gdp per capita
-gdpwaste_labels<-labs(x = "Mismanaged plastic waste per capita (kg/day)", y = "GDP per capita ($)",
-                title = "GDP versus mismanaged plastic waste per capita")
-gdpwaste<-ggplot(gpmp2010_final, mapping = aes(x = gpmp2010_final$`Mismanaged plastic waste per capita (per day/kg)`, y = gpmp2010_final$`GDP per capita`))
+#mismanaged plastic waste per capita vs gdp per capita - every country
+gdpwaste_labels <-labs(x = "GDP per capita ($)", y = "Mismanaged plastic waste per capita (kg/day)",
+                       title = "GDP versus mismanaged plastic waste per capita")
+gdpwaste<-ggplot(gpmp2010_final, mapping = aes(x = gpmp2010_final$`GDP per capita`, y = gpmp2010_final$`Mismanaged plastic waste per capita (per day/kg)`))
 gdpwaste + geom_point() + theme_light() + gdpwaste_labels + geom_smooth(method ="lm", se = FALSE, col="red")
 gdpwaste + geom_density2d() + theme_linedraw() + gdpwaste_labels
 
-#mismanaged plastic waste per capita versus population
-populationwaste<-ggplot(gpmp2010_final, mapping = aes(x=gpmp2010_final$`Mismanaged plastic waste per capita (per day/kg)`, y = gpmp2010_final$Population))
-populationwaste_labels<-labs(x="Mismanaged plastic waste per capita (kd/day)", y="Population", 
+#let's see the correlation coefficient for mismanaged plastic waste relatively to population and GDP per capita - every country
+cor.test(gpmp2010_final$`Mismanaged plastic waste per capita (per day/kg)`, gpmp2010_final$`GDP per capita`) #there is a moderate negative correlation, so it means that decreasing the GDP per capita, the mismanaged plastic waste per capita increases
+(-0.432252)^2  #coefficient of determination R2
+
+
+#mismanaged plastic waste per capita vs gdp per capita - lower GDP
+gdpwaste_labels_lower <-labs(x = "GDP per capita ($)", y = "Mismanaged plastic waste per capita (kg/day)",
+                       title = "GDP versus mismanaged plastic waste per capita - lower range")
+gdpwaste_lower <-ggplot(gpmp2010_final_lowerGDP, mapping = aes(x = gpmp2010_final_lowerGDP$`GDP per capita`, y = gpmp2010_final_lowerGDP$`Mismanaged plastic waste per capita (per day/kg)`))
+gdpwaste_lower + geom_point() + theme_light() + gdpwaste_labels_lower + geom_smooth(method ="lm", se = FALSE, col="red")
+gdpwaste_lower + geom_density2d() + theme_linedraw() + gdpwaste_labels_lower
+
+#let's see the correlation coefficient for mismanaged plastic waste relatively to population and GDP per capita - lower GDP
+cor.test(gpmp2010_final_lowerGDP$`Mismanaged plastic waste per capita (per day/kg)`, gpmp2010_final_lowerGDP$`GDP per capita`) #there is a weak positive correlation, so it means that increasing the GDP per capita, the mismanaged plastic waste per capita slightly increases
+(0.114184)^2  #coefficient of determination R2
+
+
+#mismanaged plastic waste per capita vs gdp per capita - higher GDP
+gdpwaste_labels_higher <-labs(x = "GDP per capita ($)", y = "Mismanaged plastic waste per capita (kg/day)",
+                      title = "GDP versus mismanaged plastic waste per capita - higher range")
+gdpwaste_higher <-ggplot(gpmp2010_final_higherGDP, mapping = aes(x = gpmp2010_final_higherGDP$`GDP per capita`, y = gpmp2010_final_higherGDP$`Mismanaged plastic waste per capita (per day/kg)`))
+gdpwaste_higher + geom_point() + theme_light() + gdpwaste_labels_higher + geom_smooth(method ="lm", se = FALSE, col="red") #even though the regression line goes below the 0 value for mismanaged plastic waste, negative values are not possibile
+gdpwaste_higher + geom_density2d() + theme_linedraw() + gdpwaste_labels_higher
+
+#let's see the correlation coefficient for mismanaged plastic waste relatively to population and GDP per capita - higher GDP
+cor.test(gpmp2010_final_higherGDP$`Mismanaged plastic waste per capita (per day/kg)`, gpmp2010_final_higherGDP$`GDP per capita`) #there is a moderate negative correlation, so it means that increasing the GDP per capita, the mismanaged plastic waste per capita decreases
+(-0.3974513)^2  #coefficient of determination R2
+
+
+
+#mismanaged plastic waste per capita versus population - every country
+populationwaste<-ggplot(gpmp2010_final, mapping = aes(x=gpmp2010_final$Population, y = gpmp2010_final$`Mismanaged plastic waste per capita (per day/kg)`))
+populationwaste_labels<-labs(x="Population", y="Mismanaged plastic waste per capita (kd/day)", 
                              title="Population versus mismanaged plastic waste per capita")
 populationwaste + geom_point() + populationwaste_labels + theme_minimal() + geom_smooth(method ="lm", se = FALSE, col="red")
 
-#let's see the correlation coefficient for mismanaged plastic waste relatively to population and GDP per capita.
-cor.test(gpmp2010_final$`Mismanaged plastic waste per capita (per day/kg)`, gpmp2010_final$`GDP per capita`) #there is a moderate negative correlation, so it means that decreasing the GDP per capita, the mismanaged plastic waste per capita increases
-(-0.432252)^2  #coefficient of determination R2
+#let's see the correlation coefficient for mismanaged plastic waste relatively to population and GDP per capita - higher GDP
 cor.test(gpmp2010_final$`Mismanaged plastic waste per capita (per day/kg)`, gpmp2010_final$Population) #there is a slightly negative correlation between population and mismanaged plastic waste
 (-0.02523681)^2  #coefficient of determination R2
 
+
+#mismanaged plastic waste per capita versus population - every country (no outliers)
+populationwaste_nooutliers <-ggplot(gpmp2010_final_nooutliers, mapping = aes(x=gpmp2010_final_nooutliers$Population, y = gpmp2010_final_nooutliers$`Mismanaged plastic waste per capita (per day/kg)`))
+populationwaste_labels<-labs(x="Population", y="Mismanaged plastic waste per capita (kd/day)", 
+                             title="Population versus mismanaged plastic waste per capita (no outliers)")
+populationwaste_nooutliers + geom_point() + populationwaste_labels + theme_minimal() + geom_smooth(method ="lm", se = FALSE, col="red")
+
+#let's see the correlation coefficient for mismanaged plastic waste relatively to population and GDP per capita - higher GDP
+cor.test(gpmp2010_final_nooutliers$`Mismanaged plastic waste per capita (per day/kg)`, gpmp2010_final_nooutliers$Population) #there is a slightly negative correlation between population and mismanaged plastic waste
+(-0.09396464)^2  #coefficient of determination R2
+
+
+#mismanaged plastic waste per capita versus population - lower range
+populationwaste_lower <-ggplot(gpmp2010_final_lowerpop, mapping = aes(x=gpmp2010_final_lowerpop$Population, y = gpmp2010_final_lowerpop$`Mismanaged plastic waste per capita (per day/kg)`))
+populationwaste_labels_lower <-labs(x="Population", y="Mismanaged plastic waste per capita (kd/day)", 
+                             title="Population versus mismanaged plastic waste per capita - lower range")
+populationwaste_lower + geom_point() + populationwaste_labels_lower + theme_minimal() + geom_smooth(method ="lm", se = FALSE, col="red")
+
+#let's see the correlation coefficient for mismanaged plastic waste relatively to population and GDP per capita - higher GDP
+cor.test(gpmp2010_final_lowerpop$`Mismanaged plastic waste per capita (per day/kg)`, gpmp2010_final_lowerpop$Population) #there is a moderate negative correlation between population and mismanaged plastic waste
+(-0.4035794)^2  #coefficient of determination R2
+
+
+#mismanaged plastic waste per capita versus population - higher range
+populationwaste_higher <-ggplot(gpmp2010_final_higherpop, mapping = aes(x=gpmp2010_final_higherpop$Population, y = gpmp2010_final_higherpop$`Mismanaged plastic waste per capita (per day/kg)`))
+populationwaste_labels_higher <-labs(x="Population", y="Mismanaged plastic waste per capita (kd/day)", 
+                             title="Population versus mismanaged plastic waste per capita - higher range")
+populationwaste_higher + geom_point() + populationwaste_labels_higher + theme_minimal() + geom_smooth(method ="lm", se = FALSE, col="red")
+
+#let's see the correlation coefficient for mismanaged plastic waste relatively to population and GDP per capita - higher GDP
+cor.test(gpmp2010_final_higherpop$`Mismanaged plastic waste per capita (per day/kg)`, gpmp2010_final_higherpop$Population) #there is a very slight positive correlation between population and mismanaged plastic waste
+(0.0115648)^2  #coefficient of determination R2
+
+
+#mismanaged plastic waste per capita versus population - higher range (no outliers)
+populationwaste_higher_nooutliers <-ggplot(gpmp2010_final_higherpop_nooutliers, mapping = aes(x=gpmp2010_final_higherpop_nooutliers$Population, y = gpmp2010_final_higherpop_nooutliers$`Mismanaged plastic waste per capita (per day/kg)`))
+populationwaste_labels_higher <-labs(x="Population", y="Mismanaged plastic waste per capita (kd/day)", 
+                                     title="Population versus mismanaged plastic waste per capita - higher range (no outliers)")
+populationwaste_higher_nooutliers + geom_point() + populationwaste_labels_higher + theme_minimal() + geom_smooth(method ="lm", se = FALSE, col="red")
+
+#let's see the correlation coefficient for mismanaged plastic waste relatively to population and GDP per capita - higher GDP
+cor.test(gpmp2010_final_higherpop_nooutliers$`Mismanaged plastic waste per capita (per day/kg)`, gpmp2010_final_higherpop_nooutliers$Population) #there is a very slight negative correlation between population and mismanaged plastic waste
+(-0.05138383)^2  #coefficient of determination R2
+
 #funzione lm() per alpha e beta della retta di regressione
+
+
 
 ## Inferential analysis
 # {H0: μ = 0.052;  H1: μ > 0.052}, alpha = 0.05
-install.packages("stats")
-library(stats)
+
 # calculating the unbiased sample variance
 usv_waste <- var(gpmp2010_final[,2], na.rm = TRUE)
 tsobs_waste <- (0.05127703 - 0.052) / sqrt(usv_waste/n2)  # -0.1672166
