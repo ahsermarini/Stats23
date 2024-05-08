@@ -223,15 +223,27 @@ cor.test(gpmp2010_final_higherpop_nooutliers$`Mismanaged plastic waste per capit
 
 # calculating the unbiased sample variance
 usv_waste <- var(gpmp2010_final[,2], na.rm = TRUE)
-tsobs_waste <- (0.05127703 - 0.052) / sqrt(usv_waste/n2)  # -0.1672166
-t147_0.95 <- 1.655285  # found on the internet
+(tsobs_waste <- (0.05127703 - 0.052) / sqrt(usv_waste/n2))  # -0.1672166
+t147_0.95 <- qt(0.95, df = 147, lower.tail = FALSE)  # this value is the t test (student distribution) with 147 degrees of freedom and alpha = 0.05
 # as our test is right-tailed, we have to compare the value of tsobs to t147,0.95
 tsobs_waste > t147_0.95
-# therefore we cannot reject H0 at 5% significance level
-pval
+# therefore we can reject H0 at 5% significance level
+
 # the p-value we expect stands between 0.5 and 0.6
 
 
+## Inferential analysis
+# {H0: μ = 0.052;  H1: μ > 0.052}, alpha = 0.05
+
+# calculating the unbiased sample variance
+usv_waste_nooutliers <- var(gpmp2010_final_nooutliers[,2], na.rm = TRUE)
+(tsobs_waste_nooutliers <- (mean(gpmp2010_final_nooutliers[,2]) - 0.052) / sqrt(usv_waste_nooutliers/(n2-2)))  # -0.1632143
+t145_0.95 <- qt(0.95, df = 145, lower.tail = FALSE)   # this value is the t test (student distribution) with 147 degrees of freedom and alpha = 0.05
+# as our test is right-tailed, we have to compare the value of tsobs to t145,0.95
+tsobs_waste_nooutliers > t145_0.95
+# therefore we can reject H0 at 5% significance level
+
+# the p-value we expect stands between 0.5 and 0.6
 #FARE CHECK DI NORMALITA CON ISTOGRAMMA DENSITA. 
 #SI POSSONO FARE DUE TEST DIVERSI SE DIVIDIAMO IN DUE GRUPPI I DATI. 
 #TEST DIFFERENZA MEDIA 
